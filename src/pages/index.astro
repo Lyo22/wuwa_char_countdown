@@ -1,0 +1,64 @@
+---
+
+import Layout from '../layouts/Layout.astro';
+import Countdown from '../components/Countdown.astro';
+
+const v_d = new Date( import.meta.env.PUBLIC_VERSION_DATE);
+const now = new Date();
+
+const diffMs = now.getTime() - v_d.getTime();
+
+
+const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+const phase = diffDays < 21 ? 1 : 2
+
+const phaseEndDate = new Date(v_d.getTime() + (21 * phase) * 24 * 60 * 60 * 1000);
+
+
+---
+
+<Layout>
+		<video 
+		src="../assets/bg-video.mp4"
+		autoplay={true}
+		loop={true}
+		poster="../assets/bg-video.mp4"
+		style="">
+	</video>
+
+	<main class="countdown-container">
+
+		{
+			diffDays > 0 && <h2 class="text-center text-sm font-bold">Phase {phase} </h2>
+		}
+		<Countdown date={diffDays > 0 ? phaseEndDate : v_d } />
+	
+	</main>
+</Layout>
+
+
+
+<style> 
+	.countdown-container {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		inset: 0;
+	}
+
+	video {
+		opacity: 0.5;
+		width: 100%; 
+		height: 100%;
+		-o-object-fit: cover;
+		object-fit: cover;
+
+	}
+
+
+</style>

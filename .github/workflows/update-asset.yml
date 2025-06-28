@@ -1,0 +1,28 @@
+name: Descargar archivo y redeploy
+
+on:
+  schedule:
+    - cron: '0 0 */30 * *'  # cada 15 días (ajustá a tu gusto)
+  workflow_dispatch:       # para ejecutarla manualmente desde GitHub
+
+jobs:
+  update-asset:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Descargar archivo
+        env:
+          URL: ${{ secrets.ASSET_URL }}
+        run: |
+          mkdir -p public/assets
+          curl -L  $URL -o public/assets/video.mp4
+
+      - name: Commit y push si hay cambios
+        run: |
+          git config user.name "github-actions"
+          git config user.email "bot@example.com"
+          git add public/assets/video.mp4
+          git commit -m "Actualización automática del video" || echo "No hay cambios"
+          git push
