@@ -9,10 +9,10 @@ export default defineConfig({
   env: {
  schema: {
    PUBLIC_PAGE_URL: envField.string({ context: "client", access: "public"}),
-
- }
+  
+ },
 },
-
+  publicDir: "./public",
   integrations: [preact()],
    vite: {
     plugins: [tailwindcss()],
