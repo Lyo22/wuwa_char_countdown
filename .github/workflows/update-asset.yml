@@ -2,7 +2,7 @@ name: Descargar archivo y redeploy
 
 on:
   schedule:
-    - cron: '0 0 */30 * *'  # cada 15 días (ajustá a tu gusto)
+    - cron: '0 0 */21 * *'  # cada 15 días (ajustá a tu gusto)
   workflow_dispatch:       # para ejecutarla manualmente desde GitHub
 
 jobs:
@@ -11,6 +11,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt 
+
+      - name: Ejecutar scraping y actualizar código
+        run: python src/utils/version.py
 
       - name: Descargar archivo
         env:
