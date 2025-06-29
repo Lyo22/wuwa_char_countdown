@@ -1,39 +1,37 @@
 ---
-
 import Layout from '../layouts/Layout.astro';
 import Countdown from '../components/Countdown.astro';
 
-const v_d = new Date( import.meta.env.PUBLIC_VERSION_DATE);
+const v_d = new Date(import.meta.env.PUBLIC_VERSION_DATE);
 const now = new Date();
 
 const diffMs = now.getTime() - v_d.getTime();
-
-
 const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-const phase = diffDays < 21 ? 1 : 2
+const versionIndex = Math.floor(diffDays / 42);
 
-const phaseEndDate = new Date(v_d.getTime() + (21 * phase) * 24 * 60 * 60 * 1000);
+const currentVersionDate =  new Date(v_d.getTime() + (versionIndex * 42) * 24 * 60 * 60 * 1000)
 
+const daysInCurrentVersion  = Math.floor((now.getTime() - currentVersionDate.getTime()) /  (1000 * 24 * 60 * 60 ))
+const phase = daysInCurrentVersion < 21 ? 1 : 2
 
+const phaseEndDate = new Date(currentVersionDate.getTime() + (21 * phase) * 24 * 60 * 60 * 1000);
 ---
 
 <Layout>
 		<video 
-		src="../assets/bg-video.mp4"
+		src="/public/assets/bg-video.mp4"
 		autoplay={true}
 		loop={true}
-		poster="../assets/bg-video.mp4"
+		poster="/public/assets/bg-video.mp4"
 		style="">
 	</video>
 
 	<main class="countdown-container">
-
 		{
-			diffDays > 0 && <h2 class="text-center text-sm font-bold">Phase {phase} </h2>
+			diffDays > 0 && <h2 class="text-center text-sm font-bold">{import.meta.env.VERSION} <span>Phase {phase}</span></h2>
 		}
 		<Countdown date={diffDays > 0 ? phaseEndDate : v_d } />
-	
 	</main>
 </Layout>
 
@@ -57,7 +55,6 @@ const phaseEndDate = new Date(v_d.getTime() + (21 * phase) * 24 * 60 * 60 * 1000
 		height: 100%;
 		-o-object-fit: cover;
 		object-fit: cover;
-
 	}
 
 
