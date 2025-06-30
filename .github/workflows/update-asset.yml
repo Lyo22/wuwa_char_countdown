@@ -17,12 +17,14 @@ jobs:
       - name: Ejecutar scraping y actualizar código
         run: python src/utils/version.py
 
-      - name: Descargar archivo
+      - name: Descargar archivos
         env:
-          URL: ${{ secrets.ASSET_URL }}
+          VIDEO_URL: ${{ secrets.PUBLIC_VIDEO_URL }}
+          POSTER_URL: ${{ secrets.PUBLIC_POSTER_URL }}
         run: |
           mkdir -p public/assets
-          curl -L  $URL -o public/assets/video.mp4
+          curl -L "$VIDEO_URL" -o public/assets/bg-video.mp4
+          curl -L "$POSTER_URL" -o public/assets/poster.webp
 
       - name: Commit y push si hay cambios
         run: |
