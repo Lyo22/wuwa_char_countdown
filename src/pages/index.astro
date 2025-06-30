@@ -33,7 +33,7 @@ const phaseEndDate = new Date(currentVersionDate.getTime() + (21 * phase) * 24 *
 		{
 			diffDays > 0 && <h2 class="text-center text-sm font-bold">{import.meta.env.VERSION} <span>Phase {phase}</span></h2>
 		}
-		<Countdown date={diffDays > 0 ? phaseEndDate : v_d } />
+		<Countdown client:load date={diffDays > 0 ? phaseEndDate : v_d } />
 	</main>
 </Layout>
 
