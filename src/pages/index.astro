@@ -20,11 +20,13 @@ const phaseEndDate = new Date(currentVersionDate.getTime() + (21 * phase) * 24 *
 
 <Layout>
 	<video 
-		src="assets/bg-video.mp4"
+		src="/assets/bg-poster.mp4"
 		autoplay={true}
 		loop={true}
+		poster="/assets/bg-poster.webp"
 		style="">
 	</video>
+
 	<main class="countdown-container">
 		{
 			diffDays > 0 && <h2 class="text-center text-sm font-bold">{import.meta.env.VERSION} <span>Phase {phase}</span></h2>
@@ -54,5 +56,6 @@ const phaseEndDate = new Date(currentVersionDate.getTime() + (21 * phase) * 24 *
 		-o-object-fit: cover;
 		object-fit: cover;
 	}
+
 
 </style>
