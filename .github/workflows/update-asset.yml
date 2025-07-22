@@ -12,8 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Instalar dependencias
+      
         run: pip install -r requirements.txt 
-
+      - name: Instalar navegadores Playwright
+        run: python -m playwright install
+        
       - name: Ejecutar scraping y actualizar código
         run: python src/utils/version.py
 
