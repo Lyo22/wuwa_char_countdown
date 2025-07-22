@@ -1,0 +1,106 @@
+---
+import {servers} from "../constants/index"
+
+const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+const timezone = userTimezone.split("/")[0]
+
+---
+
+<div class="custom-select-wrapper">
+  <button id="dropdown-btn" class="custom-select-btn">
+    <span id="selected-option">{servers.find( ({zone}) => zone.split("/")[0]  == timezone)?.zone.split("/")[0]}</span>
+  </button>
+
+  <ul id="dropdown-menu" class="custom-select-menu hidden">
+    {servers.map((opt) => (
+      <li
+        class="custom-select-option"
+        data-value={opt.name}
+      >
+        {opt.name}
+      </li>
+    ))}
+  </ul>
+
+  <input type="hidden" name="server" id="server-input" value={servers.find( ({zone}) => zone.split("/")[0]  == timezone)?.zone.split("/")[0]} />
+</div>
+
+<style>
+ 
+  .custom-select-wrapper {
+    z-index: 99;
+    position: fixed;
+    margin: 10px 14px;
+    top: 0;
+    right: 0;
+    width:100px;
+    user-select: none;
+  }
+
+  .custom-select-btn {
+    width: 100%;
+    background-color: transparent;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .custom-select-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 4px;
+    background-color: rgba(0, 0, 0, 0.291);
+    border-radius: 5px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 1000;
+  }
+
+  .custom-select-option {
+    padding: 10px;
+    cursor: pointer;
+
+  }
+
+  .custom-select-option:hover {
+    background-color: rgba(255, 255, 255, 0.209);
+  }
+
+  .hidden {
+    display: none;
+
+  }
+</style>
+
+<script type="module">
+    
+  const btn = document.getElementById('dropdown-btn');
+  const menu = document.getElementById('dropdown-menu');
+  const options = menu.querySelectorAll('li');
+  const selectedText = document.getElementById('selected-option');
+  const hiddenInput = document.getElementById('server-input');
+
+  btn.addEventListener('click', () => {
+    menu.classList.toggle('hidden');
+  });
+
+  options.forEach(option => {
+    option.addEventListener('click', () => {
+      const value = option.dataset.value;
+      selectedText.textContent = value;
+      hiddenInput.value = value;
+      menu.classList.add('hidden');
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!btn.contains(e.target) && !menu.contains(e.target)) {
+      menu.classList.add('hidden');
+    }
+  });
+</script>
