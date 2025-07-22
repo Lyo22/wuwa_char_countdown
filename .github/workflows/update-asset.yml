@@ -36,5 +36,4 @@ jobs:
           git add public/assets/bg-video.mp4 public/assets/bg-poster.webp
           git commit -m "Actualización automática del video" || echo "No hay cambios"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:master
-      - name: Redeploy en Vercel
-        run: npx vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+
