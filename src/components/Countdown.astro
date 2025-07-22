@@ -56,7 +56,7 @@ function updateUi(d: string,h: string,m: string,s: string) {
 }
 
 
-function parserTime(date, serverTimeZone, userTimeZone) {
+function parserTime(date:number, serverTimeZone: string | undefined, userTimeZone: string) {
 
 const utc = DateTime.fromISO(new Date(date).toISOString(), { zone: 'utc' });
 const inServer = utc.setZone(serverTimeZone);
