@@ -12,8 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Instalar dependencias
+      
         run: pip install -r requirements.txt 
-
+      - name: Instalar navegadores Playwright
+        run: python -m playwright install
+        
       - name: Ejecutar scraping y actualizar código
         run: python src/utils/version.py
 
@@ -24,12 +27,14 @@ jobs:
         run: |
           mkdir -p public/assets
           curl -L "$VIDEO_URL" -o public/assets/bg-video.mp4
-          curl -L "$POSTER_URL" -o public/assets/poster.webp
+          curl -L "$POSTER_URL" -o public/assets/bg-poster.webp
 
       - name: Commit y push si hay cambios
         run: |
           git config user.name "github-actions"
           git config user.email "bot@example.com"
-          git add public/assets/video.mp4
+          git add public/assets/bg-video.mp4 public/assets/bg-poster.webp
           git commit -m "Actualización automática del video" || echo "No hay cambios"
-          git push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:master
+      - name: Redeploy en Vercel
+        run: npx vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
