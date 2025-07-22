@@ -1,30 +1,4 @@
-<!DOCTYPE html><html lang="en" data-astro-cid-sckkx6r4> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.10.1"><title>Astro Basics</title><link rel="stylesheet" href="/_astro/index._p0u44-A.css"></head> <body data-astro-cid-sckkx6r4>  <video src="assets/bg-video.mp4" autoplay loop poster="assets/bg-poster.webp" style="" data-astro-cid-j7pv25f6></video> <div class="custom-select-wrapper" data-astro-cid-nujh35b5> <button id="dropdown-btn" class="custom-select-btn" data-astro-cid-nujh35b5> <span id="selected-option" data-astro-cid-nujh35b5>America</span> </button> <ul id="dropdown-menu" class="custom-select-menu hidden" data-astro-cid-nujh35b5> <li class="custom-select-option" data-value="Asia" data-astro-cid-nujh35b5> Asia </li><li class="custom-select-option" data-value="SEA" data-astro-cid-nujh35b5> SEA </li><li class="custom-select-option" data-value="HMT" data-astro-cid-nujh35b5> HMT </li><li class="custom-select-option" data-value="America" data-astro-cid-nujh35b5> America </li><li class="custom-select-option" data-value="Europe" data-astro-cid-nujh35b5> Europe </li> </ul> <input type="hidden" name="server" id="server-input" value="America" data-astro-cid-nujh35b5> </div>  <script type="module">
-    
-  const btn = document.getElementById('dropdown-btn');
-  const menu = document.getElementById('dropdown-menu');
-  const options = menu.querySelectorAll('li');
-  const selectedText = document.getElementById('selected-option');
-  const hiddenInput = document.getElementById('server-input');
-
-  btn.addEventListener('click', () => {
-    menu.classList.toggle('hidden');
-  });
-
-  options.forEach(option => {
-    option.addEventListener('click', () => {
-      const value = option.dataset.value;
-      selectedText.textContent = value;
-      hiddenInput.value = value;
-      menu.classList.add('hidden');
-    });
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!btn.contains(e.target) && !menu.contains(e.target)) {
-      menu.classList.add('hidden');
-    }
-  });
-</script> <main class="countdown-container" data-astro-cid-j7pv25f6> <h2 class="text-center text-sm font-bold" data-astro-cid-j7pv25f6>2.4 <span data-astro-cid-j7pv25f6>Phase 2</span></h2>  <script type="module" src="/_astro/Countdown.astro_astro_type_script_index_1_lang.DCVLPC11.js"></script> <div id="countdown" data-new-version="false" data-time="1753264800000" class="grid auto-cols-max grid-flow-col gap-5 text-center"> <div class="flex flex-col"> <span class="countdown font-mono text-5xl"> <span style="--value:00;" aria-live="polite" id="days" aria-label="00">00</span> </span>
+<!DOCTYPE html><html lang="en" data-astro-cid-sckkx6r4> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v5.10.1"><title>Astro Basics</title><link rel="stylesheet" href="/_astro/index.B8XA-98H.css"></head> <body data-astro-cid-sckkx6r4>  <video src="assets/bg-video.mp4" autoplay loop poster="assets/bg-poster.webp" style="" data-astro-cid-j7pv25f6></video> <div class="custom-select-wrapper" data-astro-cid-nujh35b5> <button id="dropdown-btn" class="custom-select-btn" data-astro-cid-nujh35b5> <span id="selected-option" data-astro-cid-nujh35b5></span> </button> <ul id="dropdown-menu" class="custom-select-menu hidden" data-astro-cid-nujh35b5> <li class="custom-select-option" data-value="Asia" data-astro-cid-nujh35b5> Asia </li><li class="custom-select-option" data-value="SEA" data-astro-cid-nujh35b5> SEA </li><li class="custom-select-option" data-value="HMT" data-astro-cid-nujh35b5> HMT </li><li class="custom-select-option" data-value="America" data-astro-cid-nujh35b5> America </li><li class="custom-select-option" data-value="Europe" data-astro-cid-nujh35b5> Europe </li> </ul> <input type="hidden" name="server" id="server-input" value="America" data-astro-cid-nujh35b5> </div>  <script type="module" src="/_astro/SelectServer.astro_astro_type_script_index_0_lang.CF8JpQvs.js"></script> <main class="countdown-container" data-astro-cid-j7pv25f6> <script type="module" src="/_astro/Countdown.astro_astro_type_script_index_0_lang.f6tZ9_uK.js"></script> <h2 id="version" hidden class="text-center text-md font-bold opacity-80">Version 2.4 <span>Phase 2</span></h2> <div id="countdown" hidden data-new-version="true" data-time="1753264800000" class="grid auto-cols-max grid-flow-col gap-5 text-center"> <div class="flex flex-col"> <span class="countdown font-mono text-5xl"> <span style="--value:00;" aria-live="polite" id="days" aria-label="00">00</span> </span>
 days
 </div> <div class="flex flex-col"> <span class="countdown font-mono text-5xl"> <span style="--value:00;" aria-live="polite" id="hours" aria-label="00">00</span> </span>
 hours
@@ -32,4 +6,5 @@ hours
 min
 </div> <div class="flex flex-col"> <span class="countdown font-mono text-5xl"> <span style="--value:00;" aria-live="polite" id="sec" aria-label="00">00</span> </span>
 sec
-</div> </div> </main>  </body></html> 
+</div> </div> <h2 id="version-release" hidden class="text-center text-2xl font-bold">
+Version 2.4 <span> is out</span> </h2> </main>  </body></html> 
