@@ -11,6 +11,8 @@ const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 const tz = userTimezone.split("/")[0]
 const serverTimeZone = Boolean(newVersion) ? "UTC+8" : servers.find( ({zone}) => zone.split("/")[0]  == tz)?.zone
 
+console.log(serverTimeZone)
+
 const now = DateTime.now().setZone(userTimezone);
 
 let [_, userTime ] = parserTime(Number(date), serverTimeZone, userTimezone)
@@ -23,13 +25,105 @@ console.log({ now: now.toISO(), userDate: userDateParser.toISO(), isExpired });
 ---
 
 
-{!isExpired && (
-  <script type="module" src="src/utils/countdown.ts"></script>
-)}
+<script>
+
+import { DateTime } from 'luxon';
+import { servers } from '../constants';
+import {parserTime} from '../utils/parserTime'
+
+let container = document.getElementById("countdown");
+const newVersion = Boolean(container?.dataset.newVersion);
+const dateTimestamp =Number(container?.dataset.time);
+let versionRelease = document.getElementById("version-release");
+let version = document.getElementById("version");
+let intervalId: number | null = null;
+
+function startCountdown(serverName: string, newVersion: boolean, dateTimeStamp: number) {
+if (!container) return;
 
 
-{!isExpired ? (
-  <div id="countdown" data-new-version={newVersion} data-time={date.getTime()} class="grid auto-cols-max grid-flow-col gap-5 text-center">
+const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const serverTimeZone = newVersion ? "UTC+8" : servers.find(server => server.name == serverName)?.zone;
+
+let [_, userTime ] = parserTime(dateTimestamp, serverTimeZone, userTimeZone)
+
+const dt = Number(DateTime.fromISO(userTime as string));
+
+let days = document.getElementById("days");
+let hours = document.getElementById("hours");
+let minutes= document.getElementById("min");
+let seconds = document.getElementById("sec");
+
+let msInDay = 1000 * 60 * 60 * 24;
+let msInHour = 1000 * 60 * 60;
+let msInMinute = 1000 * 60;
+
+
+  if (intervalId !== null) {
+      clearInterval(intervalId);
+    }
+
+intervalId = window.setInterval(() => { 
+    let now = Date.now();
+    let diff = dt - now;
+ 
+  if (diff <= 0) {
+       if (intervalId !== null) {
+          clearInterval(intervalId);
+          intervalId = null;
+        }
+        container?.setAttribute("hidden", "true");
+        version?.setAttribute("hidden", "true");
+        versionRelease?.removeAttribute("hidden");
+
+        return;
+    }
+
+    container?.removeAttribute("hidden");
+    version?.removeAttribute("hidden");
+
+
+    let d = String(Math.floor(diff / msInDay));
+    let h =String( Math.floor((diff % msInDay) / msInHour));
+    let m = String(Math.floor((diff % msInHour) / msInMinute));
+    let s =String( Math.floor((diff % msInMinute) / 1000));
+
+    updateUi(d,h,m,s)
+
+    
+},1000)
+
+
+function updateUi(d: string,h: string,m: string,s: string) {
+
+    days?.style.setProperty("--value", d);
+    hours?.style.setProperty("--value", h);
+    minutes?.style.setProperty("--value", m);
+    seconds?.style.setProperty("--value", s);
+
+    
+}
+
+}
+
+  const params = new URLSearchParams(window.location.search);
+  const serverFromUrl = params.get("server") || Intl.DateTimeFormat().resolvedOptions().timeZone.split("/")[0];
+
+
+  startCountdown(serverFromUrl, newVersion, dateTimestamp);
+
+  document.addEventListener("serverChanged", (e) => {
+    const customEvent = e as CustomEvent<string>;
+    const newServer = customEvent.detail;
+    startCountdown(newServer, newVersion, dateTimestamp);
+  });
+
+</script>
+
+
+<h2 id="version" hidden class="text-center text-md font-bold opacity-80">Version {import.meta.env.VERSION} <span>Phase {newVersion ? 2 : 1}</span></h2>
+
+  <div id="countdown" hidden data-new-version={newVersion} data-time={date.getTime()} class="grid auto-cols-max grid-flow-col gap-5 text-center">
    <div class="flex flex-col">
     <span class="countdown font-mono text-5xl">
       <span style="--value:00;" aria-live="polite" id="days" aria-label="00">00</span>
@@ -55,11 +149,9 @@ console.log({ now: now.toISO(), userDate: userDateParser.toISO(), isExpired });
     sec
   </div>
   </div>
-) : (
-  <h2 id="version-release" class="text-center text-2xl font-bold">
+
+  <h2 id="version-release" hidden class="text-center text-2xl font-bold">
       Version {import.meta.env.VERSION} <span> is out</span>
   </h2>
-)}
-
 
 

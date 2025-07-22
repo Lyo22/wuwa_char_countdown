@@ -8,7 +8,7 @@ const timezone = userTimezone.split("/")[0]
 
 <div class="custom-select-wrapper">
   <button id="dropdown-btn" class="custom-select-btn">
-    <span id="selected-option">{servers.find( ({zone}) => zone.split("/")[0]  == timezone)?.zone.split("/")[0]}</span>
+    <span id="selected-option"></span>
   </button>
 
   <ul id="dropdown-menu" class="custom-select-menu hidden">
@@ -77,13 +77,23 @@ const timezone = userTimezone.split("/")[0]
   }
 </style>
 
-<script type="module">
-    
-  const btn = document.getElementById('dropdown-btn');
-  const menu = document.getElementById('dropdown-menu');
-  const options = menu.querySelectorAll('li');
-  const selectedText = document.getElementById('selected-option');
-  const hiddenInput = document.getElementById('server-input');
+<script>
+
+import {servers} from "../constants/index"
+
+  const btn = document.getElementById('dropdown-btn') as HTMLElement;
+  const menu = document.getElementById('dropdown-menu') as HTMLElement;
+  const options = menu?.querySelectorAll('li') ;
+  const selectedText = document.getElementById('selected-option') as HTMLElement;
+  const hiddenInput = document.getElementById('server-input') as HTMLInputElement;
+
+  const params = new URLSearchParams(window.location.search);
+  const defaultZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const fallbackServer = servers.find(({ zone }) => zone.split("/")[0] === defaultZone.split("/")[0])?.name ?? "America";
+  const serverParam =  (servers.find(({ zone }) => zone.split("/")[0] === params.get("server") )?.name) || fallbackServer; 
+
+  let selectedServer = serverParam;
+  selectedText.textContent = selectedServer;
 
   btn.addEventListener('click', () => {
     menu.classList.toggle('hidden');
@@ -91,16 +101,27 @@ const timezone = userTimezone.split("/")[0]
 
   options.forEach(option => {
     option.addEventListener('click', () => {
-      const value = option.dataset.value;
+      const value = option.dataset.value as string;
       selectedText.textContent = value;
       hiddenInput.value = value;
       menu.classList.add('hidden');
+
+
+    const params = new URLSearchParams(window.location.search);
+    params.set("server", value);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, '', newUrl);
+
+
+     document.dispatchEvent(new CustomEvent("serverChanged", { detail: value }));
     });
   });
 
-  document.addEventListener('click', (e) => {
-    if (!btn.contains(e.target) && !menu.contains(e.target)) {
-      menu.classList.add('hidden');
-    }
-  });
+ document.addEventListener('click', (e: MouseEvent) => {
+  const target = e.target as Node;
+  if (!btn.contains(target) && !menu.contains(target)) {
+    menu.classList.add('hidden');
+  }
+});
+
 </script>
