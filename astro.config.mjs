@@ -14,7 +14,7 @@ export default defineConfig({
  },
 },
 
-  publicDir: "./public/assets",
+  publicDir: "./public",
   integrations: [preact()],
 
   vite: {
