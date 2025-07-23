@@ -21,7 +21,7 @@ jobs:
         id: get_version
         run: echo "VERSION=$(python src/utils/version.py)" >> $GITHUB_OUTPUT
 
-      - name: Actualizar PUBLIC_VERSION_DATE en Vercel
+      - name: Actualizar VERSION env en Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
