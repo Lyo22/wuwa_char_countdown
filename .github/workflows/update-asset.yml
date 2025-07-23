@@ -17,9 +17,33 @@ jobs:
       - name: Instalar navegadores Playwright
         run: python -m playwright install
         
-      - name: Ejecutar scraping y actualizar código
-        run: python src/utils/version.py
+      - name: Obtener nueva versión desde Python
+        id: get_version
+        run: echo "VERSION=$(python src/utils/version.py)" >> $GITHUB_OUTPUT
 
+      - name: Actualizar VERSION env en Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          VERSION=${{ steps.get_version.outputs.VERSION }}
+          echo "Nuevo valor: $VERSION"
+      
+          # Obtener ID de la variable
+          ENV_LIST=$(curl -s -H "Authorization: Bearer $VERCEL_TOKEN" \
+            "https://api.vercel.com/v10/projects/prj_D6NMjIiBXKBiaG1oFqWdfKw0pMq0/env")
+      
+          VERSION_ENV_ID=$(echo "$ENV_LIST" | jq -r '.envs[] | select(.key=="VERSION") | .id')
+      
+          echo "ID de VERSION: $VERSION_ENV_ID"
+      
+          # Hacer PATCH para actualizar valor
+          curl -X PATCH "https://api.vercel.com/v10/projects/prj_D6NMjIiBXKBiaG1oFqWdfKw0pMq0/env/$VERSION_ENV_ID" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "value": "'"$VERSION"'",
+              "target": ["production", "preview"]
+            }'
       - name: Descargar archivos
         env:
           VIDEO_URL: ${{ secrets.PUBLIC_VIDEO_URL }}
@@ -36,4 +60,6 @@ jobs:
           git add public/assets/bg-video.mp4 public/assets/bg-poster.webp
           git commit -m "Actualización automática del video" || echo "No hay cambios"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:master
+
+
 
