@@ -2,26 +2,6 @@
 const { date, newVersion } = Astro.props;
 
 
-import { DateTime } from 'luxon';
-import {servers} from "../constants/index"
-import {parserTime} from '../utils/parserTime'
-
-
-const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-const tz = userTimezone.split("/")[0]
-const serverTimeZone = Boolean(newVersion) ? "UTC+8" : servers.find( ({zone}) => zone.split("/")[0]  == tz)?.zone
-
-console.log(serverTimeZone)
-
-const now = DateTime.now().setZone(userTimezone);
-
-let [_, userTime ] = parserTime(Number(date), serverTimeZone, userTimezone)
-
-const userDateParser = DateTime.fromJSDate(new Date(userTime!))
-const isExpired = userDateParser <= now;
-
-console.log({ now: now.toISO(), userDate: userDateParser.toISO(), isExpired });
-
 ---
 
 
