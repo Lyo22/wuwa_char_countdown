@@ -8,6 +8,9 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   output: 'server',
   adapter: vercel(),
+  build: {
+    serverEntry: '.vercel/output/functions/_render.func/dist/server/entry.mjs',
+  },
   //site: import.meta.env.BASE_URL, 
   publicDir: "./public",
   integrations: [preact()],
