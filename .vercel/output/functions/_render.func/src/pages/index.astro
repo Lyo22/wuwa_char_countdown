@@ -1,0 +1,64 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import Countdown from '../components/Countdown.astro';
+import SelectServer from '../components/SelectServer.astro';
+
+  const v_d = new Date(import.meta.env.PUBLIC_VERSION_DATE);
+  const now = new Date();
+
+  const diffMs = now.getTime() - v_d.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const versionIndex = Math.floor(diffDays / 42);
+
+  const currentVersionDate =  new Date(v_d.getTime() + (versionIndex * 42) * 24 * 60 * 60 * 1000);
+  const daysInCurrentVersion  = Math.floor((now.getTime() - currentVersionDate.getTime()) /  (1000 * 24 * 60 * 60 ));
+  const phase = daysInCurrentVersion < 21 ? 1 : 2;
+  const phaseEndDate = new Date(currentVersionDate.getTime() + (21 * phase) * 24 * 60 * 60 * 1000);
+
+  if (phase == 1) {
+    phaseEndDate.setHours(0, 0, 0, 0); 
+  } else {
+    phaseEndDate.setUTCHours(10, 0, 0, 0);
+  }
+
+---
+
+<Layout>
+	<video 
+		src="assets/bg-video.mp4"
+		autoplay
+		loop
+		poster="assets/bg-poster.webp"
+	/>
+
+	<SelectServer/>
+
+	<main class="countdown-container">
+		<Countdown newVersion={phase === 2} date={phaseEndDate} />
+	</main>
+</Layout>
+
+<style> 
+	.countdown-container {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		inset: 0;
+	}
+
+	video {
+		opacity: 0.5;
+		width: 100%; 
+		height: 100%;
+		-o-object-fit: cover;
+		object-fit: cover;
+	}
+
+
+</style>
