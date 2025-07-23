@@ -27,12 +27,20 @@ jobs:
         run: |
           VERSION=${{ steps.get_version.outputs.VERSION }}
           echo "Nuevo valor: $VERSION"
-
-          curl -X PATCH "https://api.vercel.com/v9/projects/prj_D6NMjIiBXKBiaG1oFqWdfKw0pMq0/env/VERSION" \
+      
+          # Obtener ID de la variable
+          ENV_LIST=$(curl -s -H "Authorization: Bearer $VERCEL_TOKEN" \
+            "https://api.vercel.com/v10/projects/prj_D6NMjIiBXKBiaG1oFqWdfKw0pMq0/env")
+      
+          VERSION_ENV_ID=$(echo "$ENV_LIST" | jq -r '.envs[] | select(.key=="VERSION") | .id')
+      
+          echo "ID de VERSION: $VERSION_ENV_ID"
+      
+          # Hacer PATCH para actualizar valor
+          curl -X PATCH "https://api.vercel.com/v10/projects/prj_D6NMjIiBXKBiaG1oFqWdfKw0pMq0/env/$VERSION_ENV_ID" \
             -H "Authorization: Bearer $VERCEL_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{
-              "key": "VERSION",
               "value": "'"$VERSION"'",
               "target": ["production", "preview"]
             }'
