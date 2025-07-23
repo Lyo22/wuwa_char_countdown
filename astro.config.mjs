@@ -9,20 +9,12 @@ import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   //site: import.meta.env.BASE_URL, 
-  env: {
- schema: {
-   PUBLIC_PAGE_URL: envField.string({ context: "client", access: "public"}),
- },
-},
-
   publicDir: "./public",
   integrations: [preact()],
-
   vite: {
    plugins: [tailwindcss()],
  },
 output: 'server',
-// @ts-ignore
 adapter: vercel(),
 
 });
