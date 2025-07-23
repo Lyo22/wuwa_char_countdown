@@ -17,9 +17,24 @@ jobs:
       - name: Instalar navegadores Playwright
         run: python -m playwright install
         
-      - name: Ejecutar scraping y actualizar código
-        run: python src/utils/version.py
+      - name: Obtener nueva versión desde Python
+        id: get_version
+        run: echo "VERSION=$(python src/utils/version.py)" >> $GITHUB_OUTPUT
 
+      - name: Actualizar PUBLIC_VERSION_DATE en Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          NEW_DATE=${{ steps.get_version.outputs.VERSION }}
+          echo "Nuevo valor: $VERSION"
+
+          curl -X PATCH "https://api.vercel.com/v9/projects/YOUR_PROJECT_NAME_OR_ID/env/VERSION" \
+            -H "Authorization: Bearer $VERCEL_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "value": "'"$VERSION"'",
+              "target": ["production", "preview"]
+            }'
       - name: Descargar archivos
         env:
           VIDEO_URL: ${{ secrets.PUBLIC_VIDEO_URL }}
@@ -36,4 +51,6 @@ jobs:
           git add public/assets/bg-video.mp4 public/assets/bg-poster.webp
           git commit -m "Actualización automática del video" || echo "No hay cambios"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:master
+
+
 
