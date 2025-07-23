@@ -7,7 +7,9 @@ import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   output: 'server',
-  adapter: vercel(),
+   adapter: vercel({
+    includeFiles: ['dist/server//*'],
+  }),
   build: {
     serverEntry: '.vercel/output/functions/_render.func/dist/server/entry.mjs',
   },

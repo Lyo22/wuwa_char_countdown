@@ -1,1 +1,0 @@
-const e=[{name:"Asia",zone:"Asia/Shanghai"},{name:"SEA",zone:"Asia/Singapore"},{name:"HMT",zone:"Asia/Hong_Kong"},{name:"America",zone:"America/Bogota"},{name:"Europe",zone:"Europe/Berlin"}];export{e as s};
